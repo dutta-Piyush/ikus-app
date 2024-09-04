@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ikus_app/components/buttons/ovgu_button.dart';
@@ -20,6 +21,8 @@ import 'package:ikus_app/service/syncable_service.dart';
 import 'package:ikus_app/utility/globals.dart';
 import 'package:ikus_app/utility/ui.dart';
 import 'package:package_info/package_info.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -28,6 +31,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
 
+  File? _selectedPdf; // Track selected PDF file
+    
   static const String LOG_NAME = 'SettingsPage';
   static const Color LOGO_COLOR = Color(0xFFAFAFAF);
   static const double SPACE_BETWEEN = 10;
@@ -53,6 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: OvguPixels.mainScreenPadding,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          
           SizedBox(height: 20),
           IconText(
             size: OvguPixels.headerSize,
@@ -86,6 +92,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
                 child: Icon(Icons.person, color: Colors.white),
               )
+          ),
+          SizedBox(height: SPACE_BETWEEN),
+          SettingsItem(
+            left: 'Upload PDF',
+            right: _buildSelectedPdfWidget(),
           ),
           SizedBox(height: SPACE_BETWEEN),
           SettingsItem(
@@ -185,4 +196,53 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+   // Method to handle file selection
+  Future<void> _pickPDF() async {
+  // Request permission to access storage if not granted
+  var status = await Permission.storage.request();
+  if (status.isGranted) {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      setState(() {
+        _selectedPdf = File(result.files.single.path!);
+      });
+    }
+  } else {
+    // Handle case when permission is denied
+    print('Permission denied');
+  }
+}
+
+  // UI for displaying selected PDF file
+  Widget _buildSelectedPdfWidget() {
+    if (_selectedPdf != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Selected PDF: ${_selectedPdf!.path}'),
+          SizedBox(height: 10),
+          OvguButton(
+            callback: () {
+              // Handle upload action
+              // Example action: Upload `_selectedPdf` to server
+              log('Uploading PDF: ${_selectedPdf!.path}', name: LOG_NAME);
+              // Implement your upload logic here
+            },
+            child: Text('Upload PDF'),
+          ),
+        ],
+      );
+    } else {
+      return OvguButton(
+        callback: _pickPDF,
+        child: Text('Upload OvGU document'),
+      );
+    }
+  }
+  
 }

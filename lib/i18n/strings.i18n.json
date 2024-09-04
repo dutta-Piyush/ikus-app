@@ -227,6 +227,7 @@
     "email": "Email",
     "address": "Address",
     "country": "Home Country",
+    "dob":"DOB",
     "register": "Register",
     "registering": "Registering...",
     "disclaimer": "The data will not be passed on to third parties. The data is deleted as soon as it is no longer required to achieve the purpose for which it was collected.",

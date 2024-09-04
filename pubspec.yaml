@@ -27,6 +27,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  file_picker: ^4.6.1 # Add this line for file picking
+  permission_handler: ^10.0.0
+
   # core
   intl: 0.17.0 # used by table_calendar and for formatting dates
   dart_jsonwebtoken: 2.8.0 # jwt

@@ -115,7 +115,7 @@ class CalendarService implements SyncableService {
     await PersistentService.instance.setEventRegistrationData(newInstance);
   }
 
-  Future<void> saveEventRegistrationAutofill({required int? matriculationNumber, required String? firstName, required String? lastName, required String? email, required String? address, required String? country}) async {
+  Future<void> saveEventRegistrationAutofill({required int? matriculationNumber, required String? firstName, required String? lastName, required String? email, required String? address, required String? country, required String? dob}) async {
     final newInstance = EventRegistrationData(
         matriculationNumber: matriculationNumber,
         firstName: firstName,
@@ -123,6 +123,7 @@ class CalendarService implements SyncableService {
         email: email,
         address: address,
         country: country,
+        dob: dob,
         registrationTokens: _eventRegistrationData.registrationTokens
     );
     _eventRegistrationData = newInstance;

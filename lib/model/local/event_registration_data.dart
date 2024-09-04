@@ -6,6 +6,7 @@ class EventRegistrationData {
   final String? email;
   final String? address;
   final String? country;
+  final String? dob;
   final Map<int, String> registrationTokens; // event id -> token
 
   EventRegistrationData({
@@ -15,8 +16,12 @@ class EventRegistrationData {
     required this.email,
     required this.address,
     required this.country,
+    required this.dob,
     required this.registrationTokens
+    
   });
+
+  // get dob => null;
 
   Map<String, dynamic> toMap() {
     return {
@@ -26,6 +31,7 @@ class EventRegistrationData {
       'email': email,
       'address': address,
       'country': country,
+      'dob':dob,
       'registrationTokens': Map.fromIterable(registrationTokens.entries,
         key: (entry) => entry.key.toString(),
         value: (entry) => entry.value
@@ -41,6 +47,7 @@ class EventRegistrationData {
         email: email,
         address: address,
         country: country,
+        dob:dob,
         registrationTokens: tokens
     );
   }
@@ -53,6 +60,7 @@ class EventRegistrationData {
       email: map['email'],
       address: map['address'],
       country: map['country'],
+      dob:map['dob'],
       registrationTokens: Map.fromIterable(map['registrationTokens'].entries,
         key: (entry) => int.parse(entry.key),
         value: (entry) => entry.value

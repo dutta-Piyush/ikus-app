@@ -7,7 +7,7 @@ import 'package:ikus_app/utility/extensions.dart';
 import 'package:intl/intl.dart';
 
 enum RegistrationField {
-  MATRICULATION_NUMBER, FIRST_NAME, LAST_NAME, EMAIL, ADDRESS, COUNTRY
+  MATRICULATION_NUMBER, FIRST_NAME, LAST_NAME, EMAIL, ADDRESS, COUNTRY,DOB
 }
 
 class Event {

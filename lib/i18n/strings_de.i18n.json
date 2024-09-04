@@ -229,6 +229,7 @@
     "country": "Heimatland",
     "register": "Anmelden",
     "registering": "Anmelden...",
+    "dob":"DOB",
     "disclaimer": "Eine Weitergabe der Daten an Dritte findet nicht statt. Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind.",
     "errors": {
       "validation": "Bitte alle Felder ausfüllen.",

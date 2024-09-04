@@ -22,10 +22,10 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-
   DateTime _focusedDay = DateTime.now();
   late Map<DateTime, List<Event>> _events;
   late List<Event> _myEvents;
+  CalendarFormat _calendarFormat = CalendarFormat.month; // Set default to monthly view
 
   @override
   void initState() {
@@ -47,19 +47,43 @@ class _CalendarPageState extends State<CalendarPage> {
     });
   }
 
-  Map<DateTime, List<Event>> _getVisibleEvents() {
-    DateTime currDate = DateTime(_focusedDay.year, _focusedDay.month, 1);
+Map<DateTime, List<Event>> _getVisibleEvents() {
+  DateTime startDate;
+  DateTime endDate;
 
-    Map<DateTime, List<Event>> events = {};
-    do {
-      List<Event> eventsOfCurrDay = _events[DateTime(currDate.year, currDate.month, currDate.day)] ?? [];
-      if (eventsOfCurrDay.isNotEmpty)
-        events[currDate] = eventsOfCurrDay;
-
-      currDate = currDate.add(Duration(days: 1));
-    } while (currDate.month == _focusedDay.month);
-    return events;
+  if (_calendarFormat == CalendarFormat.month) {
+    startDate = DateTime(_focusedDay.year, _focusedDay.month, 1);
+    endDate = DateTime(_focusedDay.year, _focusedDay.month + 1, 0);
+  } else if (_calendarFormat == CalendarFormat.twoWeeks) {
+    startDate = _focusedDay.subtract(Duration(days: _focusedDay.weekday));
+    endDate = startDate.add(Duration(days: 13));
+  } else {
+    startDate = _focusedDay.subtract(Duration(days: _focusedDay.weekday));
+    endDate = startDate.add(Duration(days: 6));
   }
+
+  // Initialize visible events map
+  Map<DateTime, List<Event>> visibleEvents = {};
+
+  // Iterate through each day from startDate to endDate
+  for (DateTime date = startDate; date.isBefore(endDate) || date.isAtSameMomentAs(endDate); date = date.add(Duration(days: 1))) {
+    // Calculate the week number for biweekly view
+    int weekNumber = (date.difference(startDate).inDays ~/ 7) + 1;
+
+    // Check if _events contains events for the current date or week number in biweekly view
+    if (_calendarFormat == CalendarFormat.twoWeeks) {
+      if (_events.containsKey(date) || _events.containsKey(weekNumber)) {
+        visibleEvents[date] = _events[date] ?? [];
+      }
+    } else {
+      if (_events.containsKey(date)) {
+        visibleEvents[date] = _events[date] ?? [];
+      }
+    }
+  }
+
+  return visibleEvents;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +125,15 @@ class _CalendarPageState extends State<CalendarPage> {
                     );
                   },
                   child: Icon(Icons.filter_list),
-                )
+                ),
+                IconButton(
+                  icon: Icon(_calendarFormat == CalendarFormat.month ? Icons.view_agenda : Icons.view_module),
+                  onPressed: () {
+                    setState(() {
+                      _calendarFormat = _calendarFormat == CalendarFormat.month ? CalendarFormat.week : CalendarFormat.month;
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -117,11 +149,17 @@ class _CalendarPageState extends State<CalendarPage> {
                   lastDay: DateTime.now().add(Duration(days: 365)),
                   locale: LocaleSettings.currentLocale.languageTag,
                   startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarFormat: _calendarFormat, // Set the calendar format
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
                   headerStyle: HeaderStyle(
                     titleCentered: true,
-                    formatButtonVisible: false,
+                    formatButtonVisible: true, // Allow format change
                   ),
-                  availableGestures: AvailableGestures.none,
+                  availableGestures: AvailableGestures.all, // Allow all gestures for better interaction
                   calendarStyle: CalendarStyle(
                     todayDecoration: BoxDecoration(
                       color: OvguColor.primary,

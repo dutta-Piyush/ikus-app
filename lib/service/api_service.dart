@@ -145,7 +145,8 @@ class ApiService {
     required String? lastName,
     required String? email,
     required String? address,
-    required String? country
+    required String? country, 
+    required String? dob
   }) async {
 
     Map<String, dynamic> body = {
@@ -157,6 +158,7 @@ class ApiService {
       'email': email,
       'address': address,
       'country': country,
+      'dob':dob
     };
 
     final response = await post(

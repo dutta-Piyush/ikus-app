@@ -208,6 +208,7 @@ class PersistentService {
         email: null,
         address: null,
         country: null,
+        dob:null,
         registrationTokens: {}
       );
     }

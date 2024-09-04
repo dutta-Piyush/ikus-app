@@ -50,3 +50,16 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+analysis_option.yaml
+.flutter-plugins
+.flutter-plugins-dependencies
+ikus_app.iml
+
+windows
+web
+macos
+linux
+build
+.idea
+.dart_tool
